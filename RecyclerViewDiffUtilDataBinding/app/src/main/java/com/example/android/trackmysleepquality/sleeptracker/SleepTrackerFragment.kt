@@ -22,6 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -37,7 +39,7 @@ import com.google.android.material.snackbar.Snackbar
  * The Clear button will clear all data from the database.
  */
 class SleepTrackerFragment : Fragment() {
-
+    private lateinit var sleepTrackerViewModel: SleepTrackerViewModel
     /**
      * Called when the Fragment is ready to display content to the screen.
      *
@@ -61,7 +63,7 @@ class SleepTrackerFragment : Fragment() {
         val viewModelFactory = SleepTrackerViewModelFactory(dataSource, application)
 
         // Get a reference to the ViewModel associated with this fragment.
-        val sleepTrackerViewModel =
+        sleepTrackerViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(SleepTrackerViewModel::class.java)
 
@@ -116,5 +118,26 @@ class SleepTrackerFragment : Fragment() {
             }
         })
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val navController = findNavController()
+        val navBackStackEntry = navController.getBackStackEntry(R.id.sleep_tracker_fragment)
+        // Create our observer and add it to the NavBackStackEntry's lifecycle
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                sleepTrackerViewModel.initializeTonight()
+            }
+        }
+        navBackStackEntry.lifecycle.addObserver(observer)
+
+        // As addObserver() does not automatically remove the observer, we
+        // call removeObserver() manually when the view lifecycle is destroyed
+        viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                navBackStackEntry.lifecycle.removeObserver(observer)
+            }
+        })
     }
 }

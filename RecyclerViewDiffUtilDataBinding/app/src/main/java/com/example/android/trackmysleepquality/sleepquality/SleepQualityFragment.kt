@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
  * Fragment that displays a list of clickable icons,
@@ -35,7 +36,7 @@ import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityB
  * Once the user taps an icon, the quality is set in the current sleepNight
  * and the database is updated.
  */
-class SleepQualityFragment : Fragment() {
+class SleepQualityFragment : BottomSheetDialogFragment() {
 
     /**
      * Called when the Fragment is ready to display content to the screen.
@@ -72,11 +73,10 @@ class SleepQualityFragment : Fragment() {
         // Add an Observer to the state variable for Navigating when a Quality icon is tapped.
         sleepQualityViewModel.navigateToSleepTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
-                this.findNavController().navigate(
-                        SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
                 sleepQualityViewModel.doneNavigating()
+                dismiss()
             }
         })
 

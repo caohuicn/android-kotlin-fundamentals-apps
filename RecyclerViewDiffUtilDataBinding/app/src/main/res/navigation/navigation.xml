@@ -35,7 +35,7 @@
             app:popEnterAnim="@anim/slide_in_right" />
     </fragment>
 
-    <fragment
+    <dialog
         android:id="@+id/sleep_quality_fragment"
         android:name="com.example.android.trackmysleepquality.sleepquality.SleepQualityFragment"
         android:label="@string/sleep_quality_fragment"
@@ -43,12 +43,6 @@
         <argument
             android:name="sleepNightKey"
             app:argType="long" />
-        <action
-            android:id="@+id/action_sleepQualityFragment_to_sleepTrackerFragment"
-            app:destination="@id/sleep_tracker_fragment"
-            app:launchSingleTop="false"
-            app:popUpTo="@+id/sleep_tracker_fragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+    </dialog>
 
 </navigation>

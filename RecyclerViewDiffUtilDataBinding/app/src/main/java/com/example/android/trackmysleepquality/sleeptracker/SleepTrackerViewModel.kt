@@ -121,7 +121,7 @@ class SleepTrackerViewModel(
         initializeTonight()
     }
 
-    private fun initializeTonight() {
+    fun initializeTonight() {
         viewModelScope.launch {
             tonight.value = getTonightFromDatabase()
         }
